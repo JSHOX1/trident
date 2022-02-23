@@ -40,6 +40,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 $ip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+$username = ((gwmi win32_computersystem).username).split('\')[1]
 $cname = (gi env:\Computername).Value
 Write-Host "Collecting data for $cname ($ip) | $(Get-Date -Format dd/MM/yyyy-H:mm:ss)"
 
@@ -58,6 +59,40 @@ Get-NetAdapter | ? status -eq "up" |  Get-NetIPAddress | Select IPAddress,Interf
 
 "--- DNS Cache ---"
 Get-DnsClientCache -Status 'Success' | Select Name, Data
+"----------------------------------------
+"
+
+"--- Local Users ---"
+Get-LocalUser | format-table -auto -wrap
+"----------------------------------------
+"
+
+"--- Local Groups ---"
+Net localgroup administrators | format-table -auto -wrap
+
+Net localgroup "remote desktop users" | format-table -auto -wrap
+
+Net localgroup "power users" | format-table -auto -wrap
+"----------------------------------------
+"
+
+"--- Directories ---"
+Get-ChildItem "C:\" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\temp" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\windows\temp" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Program Files (x86)" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Program Files" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\ProgramData" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\Desktop" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\Downloads" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\Documents" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Roaming\Microsoft\Windows\Recent" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Roaming" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Local" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook" -recurse | sort -Property LastWriteTime -Descending | format-table -auto -wrap
+Get-ChildItem "C:\Users\$username\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations" | sort -Property LastWriteTime -Descending | format-table -auto -wrap
 "----------------------------------------
 "
 
