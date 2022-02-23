@@ -2,11 +2,6 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
 
-param(
-[Parameter(Mandatory=$False)]
-[Switch]$a
-)
-
 $banner = @"
 ____________________________________________   _________
 ___  __/__  __ \___  _/__  __ \__  ____/__  | / /__  __/
@@ -178,8 +173,6 @@ qwinsta /server:localhost
 "----------------------------------------
 "
 
-if ($a -eq $true)
-{
 "==== ADVANCED INVESTIGATION ===="
 "--- Total Process Instances ---"
 Get-Process | Group-Object ProcessName | Select Count, Name | Sort Count -Descending
@@ -220,8 +213,6 @@ Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows Defender\Exclusions'
 Get-ChildItem -Path '\\.\pipe\' |  Sort Length | Format-Table FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessTime
 "----------------------------------------
 "
-
-}
 
 }
 
