@@ -57,6 +57,18 @@ Get-DnsClientCache -Status 'Success' | Select Name, Data
 "----------------------------------------
 "
 
+"--- Process Connections ---"
+$nets = netstat -bano|select-string 'TCP|UDP'; 
+foreach ($n in $nets)    
+{
+$p = $n -replace ' +',' ';
+$nar = $p.Split(' ');
+$pname = $(Get-Process -id $nar[-1]).Path;
+$n -replace "$($nar[-1])","$($ppath) $($pname)";
+}
+"----------------------------------------
+"
+
 "--- Local Users ---"
 Get-LocalUser | format-table -auto -wrap
 "----------------------------------------
@@ -93,18 +105,6 @@ Get-ChildItem "C:\Users\$username\AppData\Roaming\Microsoft\Windows\Recent\Autom
 
 "--- Shared folders ---"
 net use
-"----------------------------------------
-"
-
-"--- Process Connections ---"
-$nets = netstat -bano|select-string 'TCP|UDP'; 
-foreach ($n in $nets)    
-{
-$p = $n -replace ' +',' ';
-$nar = $p.Split(' ');
-$pname = $(Get-Process -id $nar[-1]).Path;
-$n -replace "$($nar[-1])","$($ppath) $($pname)";
-}
 "----------------------------------------
 "
 
